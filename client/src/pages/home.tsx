@@ -33,6 +33,7 @@ type GroupSessionInfo = {
   id: number; date: string; startTime: string; endTime: string;
   teacherName: string; teacherPhoto: string | null;
   participantCount: number; spotsLeft: number; blockId: number;
+  locationType: "in-person" | "zoom";
 };
 
 // ── Existential questions ────────────────────────────────────────────────────
@@ -171,7 +172,7 @@ function GroupJoinModal({ session, open, onClose }: {
           startTime: session!.startTime,
           endTime: session!.endTime,
           sessionType: "group",
-          locationType: "in-person",
+          locationType: session!.locationType,
           question: null,
           groupSize: data.groupSize,
           ...data,
@@ -216,10 +217,17 @@ function GroupJoinModal({ session, open, onClose }: {
                 You're confirmed! We'll see you there.
               </p>
             </div>
-            <div className="rounded-xl p-4 space-y-1" style={{ backgroundColor: "hsl(210 70% 50% / 0.06)", border: "1px solid hsl(210 70% 50% / 0.18)" }}>
-              <p className="text-xs font-semibold uppercase tracking-wide" style={{ fontFamily: "'Lato', sans-serif", color: "hsl(210 70% 38%)", letterSpacing: "0.07em" }}>📍 Location</p>
-              <p className="text-sm font-medium" style={{ fontFamily: "'Lora', serif" }}>7412 Van Maren Ln, Citrus Heights, CA 95621</p>
-            </div>
+            {session.locationType === "zoom" ? (
+              <div className="rounded-xl p-4 space-y-1" style={{ backgroundColor: "hsl(220 80% 55% / 0.06)", border: "1px solid hsl(220 80% 55% / 0.18)" }}>
+                <p className="text-xs font-semibold uppercase tracking-wide" style={{ fontFamily: "'Lato', sans-serif", color: "hsl(220 80% 45%)", letterSpacing: "0.07em" }}>🎥 Zoom Session</p>
+                <p className="text-sm text-muted-foreground" style={{ fontFamily: "'Lato', sans-serif" }}>Your teacher will send the Zoom link once they confirm your spot.</p>
+              </div>
+            ) : (
+              <div className="rounded-xl p-4 space-y-1" style={{ backgroundColor: "hsl(210 70% 50% / 0.06)", border: "1px solid hsl(210 70% 50% / 0.18)" }}>
+                <p className="text-xs font-semibold uppercase tracking-wide" style={{ fontFamily: "'Lato', sans-serif", color: "hsl(210 70% 38%)", letterSpacing: "0.07em" }}>📍 Location</p>
+                <p className="text-sm font-medium" style={{ fontFamily: "'Lora', serif" }}>7412 Van Maren Ln, Citrus Heights, CA 95621</p>
+              </div>
+            )}
             <Button className="w-full" onClick={handleClose}>Done</Button>
           </div>
         ) : (
@@ -228,10 +236,15 @@ function GroupJoinModal({ session, open, onClose }: {
               <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "hsl(32 75% 38% / 0.12)" }}>
                 <Users className="w-4 h-4" style={{ color: "hsl(32 75% 35%)" }} />
               </div>
-              <div>
-                <p className="text-sm font-semibold" style={{ fontFamily: "'Lato', sans-serif" }}>
-                  {fmt12(session.startTime)} – {fmt12(session.endTime)} · with {session.teacherName}
-                </p>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <p className="text-sm font-semibold" style={{ fontFamily: "'Lato', sans-serif" }}>
+                    {fmt12(session.startTime)} – {fmt12(session.endTime)} · with {session.teacherName}
+                  </p>
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold" style={session.locationType === "zoom" ? { backgroundColor: "hsl(220 80% 55% / 0.12)", color: "hsl(220 80% 40%)" } : { backgroundColor: "hsl(152 40% 45% / 0.12)", color: "hsl(152 40% 30%)" }}>
+                    {session.locationType === "zoom" ? "🎥 Zoom" : "📍 In-Person"}
+                  </span>
+                </div>
                 <p className="text-xs text-muted-foreground" style={{ fontFamily: "'Lato', sans-serif" }}>
                   {session.participantCount} joined · {session.spotsLeft} spots left
                 </p>

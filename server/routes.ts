@@ -257,6 +257,8 @@ export function registerRoutes(httpServer: Server, app: Express) {
         const teacher = storage.getPublicTeachers().find(t => t.id === s.teacherId);
         // Sum group sizes so one booking of 5 counts as 5 spots used
         const totalPeople = ps.reduce((sum: number, p: any) => sum + (p.groupSize || 1), 0);
+        // Inherit session type from the first participant (whoever created the group)
+        const locationType = ps[0]?.locationType ?? "in-person";
         return {
           id: s.id,
           date: s.date,
@@ -268,6 +270,7 @@ export function registerRoutes(httpServer: Server, app: Express) {
           spotsLeft: Math.max(0, MAX_GROUP_SIZE - totalPeople),
           isFull: totalPeople >= MAX_GROUP_SIZE,
           blockId: s.blockId,
+          locationType,
         };
       })
       .filter(s => !s.isFull);
