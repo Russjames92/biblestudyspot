@@ -68,6 +68,108 @@ sqlite.exec(`
   );
 `);
 
+// ── Run all migrations (ALTER TABLE IF NOT EXISTS equivalent via try/catch) ────
+const migrations = [
+  // Teachers extended fields
+  `ALTER TABLE teachers ADD COLUMN first_name TEXT`,
+  `ALTER TABLE teachers ADD COLUMN last_name TEXT`,
+  `ALTER TABLE teachers ADD COLUMN email TEXT`,
+  `ALTER TABLE teachers ADD COLUMN phone TEXT`,
+  `ALTER TABLE teachers ADD COLUMN address TEXT`,
+  `ALTER TABLE teachers ADD COLUMN city TEXT`,
+  `ALTER TABLE teachers ADD COLUMN state TEXT`,
+  `ALTER TABLE teachers ADD COLUMN zip TEXT`,
+  `ALTER TABLE teachers ADD COLUMN date_of_birth TEXT`,
+  `ALTER TABLE teachers ADD COLUMN emergency_contact TEXT`,
+  `ALTER TABLE teachers ADD COLUMN emergency_phone TEXT`,
+  `ALTER TABLE teachers ADD COLUMN notes TEXT`,
+  `ALTER TABLE teachers ADD COLUMN date_joined TEXT`,
+  // Sessions zoom fields
+  `ALTER TABLE sessions ADD COLUMN zoom_meeting_url TEXT`,
+  `ALTER TABLE sessions ADD COLUMN zoom_meeting_id TEXT`,
+  // Participants extended fields
+  `ALTER TABLE participants ADD COLUMN question TEXT`,
+  `ALTER TABLE participants ADD COLUMN location_type TEXT`,
+  `ALTER TABLE participants ADD COLUMN group_size INTEGER`,
+  `ALTER TABLE participants ADD COLUMN reminder_24_sent INTEGER NOT NULL DEFAULT 0`,
+  `ALTER TABLE participants ADD COLUMN reminder_1_sent INTEGER NOT NULL DEFAULT 0`,
+  // Notifications table
+  `CREATE TABLE IF NOT EXISTS notifications (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    teacher_id INTEGER NOT NULL,
+    type TEXT NOT NULL,
+    title TEXT NOT NULL,
+    body TEXT,
+    is_read INTEGER NOT NULL DEFAULT 0,
+    related_id INTEGER,
+    created_at TEXT NOT NULL
+  )`,
+  // Messages table
+  `CREATE TABLE IF NOT EXISTS messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sender_type TEXT NOT NULL,
+    sender_id INTEGER,
+    recipient_type TEXT NOT NULL,
+    recipient_id INTEGER,
+    body TEXT NOT NULL,
+    is_read INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL
+  )`,
+  // Resources table
+  `CREATE TABLE IF NOT EXISTS resources (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    description TEXT,
+    category TEXT NOT NULL,
+    resource_type TEXT NOT NULL DEFAULT 'lesson',
+    series_id INTEGER,
+    lesson_order INTEGER,
+    file_type TEXT,
+    file_data TEXT,
+    video_url TEXT,
+    file_name TEXT,
+    is_shared INTEGER NOT NULL DEFAULT 0,
+    uploaded_by_teacher_id INTEGER,
+    created_at TEXT NOT NULL
+  )`,
+  // Email settings table
+  `CREATE TABLE IF NOT EXISTS email_settings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    smtp_host TEXT NOT NULL DEFAULT 'smtp.gmail.com',
+    smtp_port INTEGER NOT NULL DEFAULT 587,
+    smtp_user TEXT NOT NULL DEFAULT '',
+    smtp_pass TEXT NOT NULL DEFAULT '',
+    from_name TEXT NOT NULL DEFAULT 'BibleStudySpot',
+    reminders_enabled INTEGER NOT NULL DEFAULT 0,
+    updated_at TEXT NOT NULL
+  )`,
+  // Zoom settings table
+  `CREATE TABLE IF NOT EXISTS zoom_settings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    account_id TEXT NOT NULL DEFAULT '',
+    client_id TEXT NOT NULL DEFAULT '',
+    client_secret TEXT NOT NULL DEFAULT '',
+    enabled INTEGER NOT NULL DEFAULT 0,
+    updated_at TEXT NOT NULL
+  )`,
+];
+
+for (const migration of migrations) {
+  try { sqlite.exec(migration); } catch (_) { /* column/table already exists */ }
+}
+
+// Seed email_settings default row
+const existingEmailSettings = sqlite.prepare('SELECT id FROM email_settings LIMIT 1').get();
+if (!existingEmailSettings) {
+  sqlite.prepare('INSERT INTO email_settings (smtp_host, smtp_port, smtp_user, smtp_pass, from_name, reminders_enabled, updated_at) VALUES (?,?,?,?,?,?,?)').run('smtp.gmail.com', 587, '', '', 'BibleStudySpot', 0, new Date().toISOString());
+}
+
+// Seed zoom_settings default row
+const existingZoomSettings = sqlite.prepare('SELECT id FROM zoom_settings LIMIT 1').get();
+if (!existingZoomSettings) {
+  sqlite.prepare('INSERT INTO zoom_settings (account_id, client_id, client_secret, enabled, updated_at) VALUES (?,?,?,?,?)').run('', '', '', 0, new Date().toISOString());
+}
+
 // Seed admin
 const existingAdmin = db.select().from(users).get();
 if (!existingAdmin) {
