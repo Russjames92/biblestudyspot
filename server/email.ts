@@ -35,7 +35,16 @@ export async function testEmailConnection(): Promise<{ ok: boolean; error?: stri
   try {
     const resend = getResendClient();
     if (!resend) return { ok: false, error: "No API key configured" };
-    const { error } = await resend.apiKeys.list();
+    // Send a real test to verify the key works
+    const settings = storage.getEmailSettings()!;
+    const fromEmail = settings.smtpUser || "onboarding@resend.dev";
+    const fromName = settings.fromName || "BibleStudySpot";
+    const { error } = await resend.emails.send({
+      from: `${fromName} <${fromEmail}>`,
+      to: settings.smtpUser || "onboarding@resend.dev",
+      subject: "BibleStudySpot — connection test",
+      html: "<p>Your Resend connection is working correctly.</p>",
+    });
     if (error) return { ok: false, error: error.message };
     return { ok: true };
   } catch (e: any) {
