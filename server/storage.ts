@@ -12,7 +12,12 @@ import {
   type Notification, type Message, type EmailSetting, type ZoomSetting,
 } from "@shared/schema";
 
-const sqlite = new Database("biblestudyspot.db");
+import path from "path";
+// Use RAILWAY_VOLUME_MOUNT_PATH if on Railway (persistent disk), otherwise local
+const DB_PATH = process.env.RAILWAY_VOLUME_MOUNT_PATH
+  ? path.join(process.env.RAILWAY_VOLUME_MOUNT_PATH, "biblestudyspot.db")
+  : "biblestudyspot.db";
+const sqlite = new Database(DB_PATH);
 export const db = drizzle(sqlite);
 
 sqlite.exec(`
