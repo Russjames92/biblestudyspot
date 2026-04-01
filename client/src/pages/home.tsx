@@ -702,7 +702,7 @@ function TeacherSchedule({ teacher, question, isOnline, isSolo, onBack }: {
       </button>
 
       {/* Teacher card */}
-      <div className="flex items-start gap-5 mb-8 p-5 rounded-2xl border" className="bg-card border-border">
+      <div className="flex items-start gap-5 mb-8 p-5 rounded-2xl border bg-card border-border">
         <TeacherAvatar teacher={teacher} size="lg" />
         <div className="flex-1 min-w-0">
           <h2 className="text-2xl font-semibold mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{teacher.name}</h2>
@@ -1015,7 +1015,7 @@ function ZipGate({ question, onPass, onBack }: {
         )}
 
         {result && !result.inRange && (
-          <div className="mt-6 p-5 rounded-2xl border space-y-4" className="bg-card border-border">
+          <div className="mt-6 p-5 rounded-2xl border space-y-4 bg-card border-border">
             <div>
               <p className="font-semibold mb-1" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "1.1rem" }}>
                 No BibleStudySpots near {result.city}, {result.state} yet.
@@ -1143,7 +1143,7 @@ export default function HomePage() {
             <GroupSessionsBanner onJoin={(s) => setJoiningSession(s)} />
 
             {/* Footer strip */}
-            <section className="border-t border-border/40" className="bg-secondary">
+            <section className="border-t border-border/40 bg-secondary">
               <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 text-center">
                 <p className="text-lg font-semibold mb-1" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "1.4rem" }}>
                   Every session is free. No agenda. No pressure.

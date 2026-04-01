@@ -5,7 +5,6 @@ import { rm, readFile } from "fs/promises";
 // server deps to bundle to reduce openat(2) syscalls
 // which helps cold start times
 const allowlist = [
-  "@anthropic-ai/sdk",
   "@google/generative-ai",
   "axios",
   "cors",
@@ -33,6 +32,12 @@ const allowlist = [
   "zod-validation-error",
 ];
 
+// These packages must always be external (can't be bundled)
+const forceExternal = [
+  "@anthropic-ai/sdk",
+  "better-sqlite3",
+];
+
 async function buildAll() {
   await rm("dist", { recursive: true, force: true });
 
@@ -57,7 +62,7 @@ async function buildAll() {
       "process.env.NODE_ENV": '"production"',
     },
     minify: true,
-    external: externals,
+    external: [...externals, ...forceExternal],
     logLevel: "info",
   });
 }
