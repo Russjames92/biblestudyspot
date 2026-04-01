@@ -1,0 +1,223 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light mode — warm parchment */
+    --background: 38 30% 97%;
+    --foreground: 30 25% 15%;
+    --card: 38 28% 98%;
+    --card-foreground: 30 25% 15%;
+    --popover: 38 28% 98%;
+    --popover-foreground: 30 25% 15%;
+    --primary: 32 75% 38%;
+    --primary-foreground: 38 30% 97%;
+    --secondary: 38 20% 92%;
+    --secondary-foreground: 30 25% 25%;
+    --muted: 38 15% 92%;
+    --muted-foreground: 30 10% 50%;
+    --accent: 152 30% 42%;
+    --accent-foreground: 38 30% 97%;
+    --destructive: 0 65% 45%;
+    --destructive-foreground: 38 30% 97%;
+    --border: 35 15% 86%;
+    --input: 35 15% 88%;
+    --ring: 32 75% 38%;
+    --radius: 0.625rem;
+    --chart-1: 32 75% 38%;
+    --chart-2: 152 30% 42%;
+    --chart-3: 200 50% 40%;
+    --chart-4: 45 80% 45%;
+    --chart-5: 320 40% 45%;
+  }
+
+  .dark {
+    /* Dark mode — deep space with electric warmth */
+    --background: 224 20% 7%;
+    --foreground: 220 15% 92%;
+
+    --card: 224 18% 10%;
+    --card-foreground: 220 15% 92%;
+
+    --popover: 224 18% 10%;
+    --popover-foreground: 220 15% 92%;
+
+    /* Vivid amber-gold primary — pops on dark */
+    --primary: 38 95% 58%;
+    --primary-foreground: 224 20% 7%;
+
+    --secondary: 224 15% 16%;
+    --secondary-foreground: 220 15% 80%;
+
+    --muted: 224 15% 14%;
+    --muted-foreground: 220 10% 52%;
+
+    /* Vibrant teal accent */
+    --accent: 174 80% 48%;
+    --accent-foreground: 224 20% 7%;
+
+    --destructive: 0 70% 60%;
+    --destructive-foreground: 224 20% 7%;
+
+    --border: 224 15% 18%;
+    --input: 224 15% 16%;
+    --ring: 38 95% 58%;
+
+    --chart-1: 38 95% 58%;
+    --chart-2: 174 80% 48%;
+    --chart-3: 260 80% 65%;
+    --chart-4: 320 75% 65%;
+    --chart-5: 200 80% 60%;
+
+    /* Custom dark-only tokens used via inline styles */
+    --glow-amber: 38 95% 58%;
+    --glow-teal: 174 80% 48%;
+    --glow-purple: 260 80% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Lora', 'Georgia', serif;
+    line-height: 1.6;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cormorant Garamond', 'Georgia', serif;
+    text-wrap: balance;
+    line-height: 1.2;
+  }
+
+  p, li { text-wrap: pretty; }
+  button, input, select, textarea { font-family: 'Lato', 'Helvetica Neue', sans-serif; }
+}
+
+/* ── Dark mode special effects ─────────────────────────────────────────────── */
+
+/* Subtle gradient mesh background in dark mode */
+.dark body {
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% 10%, hsl(260 80% 20% / 0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 90%, hsl(174 80% 20% / 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 30% at 60% 40%, hsl(38 95% 30% / 0.08) 0%, transparent 50%);
+  background-attachment: fixed;
+}
+
+/* Card glow on hover in dark mode */
+.dark .card-glow {
+  transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+}
+.dark .card-glow:hover {
+  box-shadow: 0 0 0 1px hsl(38 95% 58% / 0.3), 0 8px 32px hsl(38 95% 58% / 0.1);
+  border-color: hsl(38 95% 58% / 0.35) !important;
+}
+
+/* Question card accent glow in dark */
+.dark .question-card:hover {
+  box-shadow: 0 0 0 1px hsl(174 80% 48% / 0.4), 0 8px 40px hsl(174 80% 48% / 0.12);
+  border-color: hsl(174 80% 48% / 0.4) !important;
+}
+
+/* Gradient text for hero in dark mode */
+.dark .hero-gradient-text {
+  background: linear-gradient(135deg, hsl(38 95% 65%) 0%, hsl(320 75% 70%) 50%, hsl(174 80% 60%) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glowing primary button in dark */
+.dark .btn-glow {
+  box-shadow: 0 0 20px hsl(38 95% 58% / 0.35), 0 4px 12px hsl(38 95% 58% / 0.2);
+  transition: box-shadow 0.25s ease, transform 0.2s ease;
+}
+.dark .btn-glow:hover {
+  box-shadow: 0 0 32px hsl(38 95% 58% / 0.5), 0 6px 20px hsl(38 95% 58% / 0.3);
+  transform: translateY(-1px);
+}
+
+/* Verse card glow in dark */
+.dark .verse-pill {
+  background: linear-gradient(135deg, hsl(38 95% 58% / 0.12), hsl(174 80% 48% / 0.08));
+  border-color: hsl(38 95% 58% / 0.25) !important;
+}
+
+/* Shimmer loader — dark variant */
+.dark .skeleton {
+  background: linear-gradient(90deg, hsl(224 18% 14%) 25%, hsl(224 18% 18%) 50%, hsl(224 18% 14%) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* ── Theme toggle ──────────────────────────────────────────────────────────── */
+.theme-toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--card));
+  color: hsl(var(--muted-foreground));
+}
+.theme-toggle:hover {
+  background: hsl(var(--secondary));
+  color: hsl(var(--foreground));
+  transform: rotate(15deg);
+}
+
+/* ── Shimmer & animations ──────────────────────────────────────────────────── */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, hsl(38 20% 90%) 25%, hsl(38 20% 94%) 50%, hsl(38 20% 90%) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 0.375rem;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in-up { animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.fade-in-up-delay-1 { animation-delay: 0.1s; }
+.fade-in-up-delay-2 { animation-delay: 0.2s; }
+.fade-in-up-delay-3 { animation-delay: 0.3s; }
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
