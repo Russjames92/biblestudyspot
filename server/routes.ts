@@ -758,8 +758,10 @@ export function registerRoutes(httpServer: Server, app: Express) {
       teacherName: "Russell Champlain",
       spotAddress: "7412 Van Maren Ln, Citrus Heights, CA 95621",
     });
-    const ok24 = await sendEmail(settings.smtpUser, "[TEST] 24-hour reminder sample ✦", html24);
-    const ok1  = await sendEmail(settings.smtpUser, "[TEST] 1-hour reminder sample ✦", html1);
+    // Send test to the admin email stored in smtpUser field
+    const testTo = settings.smtpUser || "18russjames@gmail.com";
+    const ok24 = await sendEmail(testTo, "[TEST] 24-hour reminder sample ✦", html24);
+    const ok1  = await sendEmail(testTo, "[TEST] 1-hour reminder sample ✦", html1);
     if (ok24 && ok1) res.json({ ok: true });
     else res.status(500).json({ error: "Failed to send — check your credentials" });
   });

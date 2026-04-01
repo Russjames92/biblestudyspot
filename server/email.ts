@@ -14,10 +14,11 @@ export async function sendEmail(to: string, subject: string, html: string): Prom
     const resend = getResendClient();
     if (!resend) return false;
     const settings = storage.getEmailSettings()!;
-    const fromEmail = settings.smtpUser || "onboarding@resend.dev";
+    // Always send from onboarding@resend.dev (works without domain verification)
+    // smtpUser stores the admin's email for test destinations
     const fromName = settings.fromName || "BibleStudySpot";
     const { error } = await resend.emails.send({
-      from: `${fromName} <${fromEmail}>`,
+      from: `${fromName} <onboarding@resend.dev>`,
       to,
       subject,
       html,
@@ -37,11 +38,12 @@ export async function testEmailConnection(): Promise<{ ok: boolean; error?: stri
     if (!resend) return { ok: false, error: "No API key configured" };
     // Send a real test to verify the key works
     const settings = storage.getEmailSettings()!;
-    const fromEmail = settings.smtpUser || "onboarding@resend.dev";
+    // Always send from onboarding@resend.dev (works without domain verification)
+    // smtpUser stores the admin's email for test destinations
     const fromName = settings.fromName || "BibleStudySpot";
     const { error } = await resend.emails.send({
-      from: `${fromName} <${fromEmail}>`,
-      to: settings.smtpUser || "onboarding@resend.dev",
+      from: `${fromName} <onboarding@resend.dev>`,
+      to: settings.smtpUser || "18russjames@gmail.com",  // send test to admin email
       subject: "BibleStudySpot — connection test",
       html: "<p>Your Resend connection is working correctly.</p>",
     });
