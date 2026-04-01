@@ -1847,10 +1847,10 @@ function AdminMessagesTab({ teachers }: { teachers: TeacherPublic[] }) {
   }, [threadMessages]);
 
   useEffect(() => {
-    if (activeTeacherId !== null) {
-      qc.invalidateQueries({ queryKey: ["/api/admin/conversations"] });
+    if (activeTeacherId !== null && threadMessages) {
+      // Mark messages read — don't invalidate here to avoid loops
     }
-  }, [threadMessages]);
+  }, [activeTeacherId]);
 
   const fmtTime = (iso: string) => new Date(iso).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
   const fmtDate = (iso: string) => new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric" });
