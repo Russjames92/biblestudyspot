@@ -6,7 +6,7 @@ export const API_BASE = ("__PORT_5000__" as string).startsWith("__") ? "" : "__P
 
 // ── Token store ───────────────────────────────────────────────────────────────
 // Stored on window so it survives module re-evaluation inside sandboxed iframes.
-declare global { interface Window { __bss_token?: string | null; } }
+declare global { interface Window { __bss_token?: string | null; __bss_admin_token?: string | null; } }
 
 export function setAuthToken(token: string | null) {
   window.__bss_token = token;
@@ -16,8 +16,9 @@ export function getAuthToken(): string | null {
   return window.__bss_token ?? null;
 }
 
+// Returns either teacher or admin token — whichever is present
 function getToken(): string | null {
-  return window.__bss_token ?? null;
+  return window.__bss_token ?? window.__bss_admin_token ?? null;
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
