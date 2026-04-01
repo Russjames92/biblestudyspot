@@ -1,31 +1,28 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 import { storage } from "./storage";
 
-// ── Get a live transporter from current DB settings ──────────────────────────
-export async function getTransporter() {
+// smtpPass = Resend API key, smtpUser = from-email address
+function getResendClient() {
   const settings = storage.getEmailSettings();
-  if (!settings || !settings.smtpUser || !settings.smtpPass) return null;
-
-  return nodemailer.createTransport({
-    host: settings.smtpHost,
-    port: settings.smtpPort,
-    secure: settings.smtpPort === 465,
-    auth: { user: settings.smtpUser, pass: settings.smtpPass },
-  });
+  if (!settings?.smtpPass) return null;
+  return new Resend(settings.smtpPass);
 }
 
-// ── Shared email wrapper ───────────────────────────────────────────────────
+// ── Shared email wrapper ──────────────────────────────────────────────────
 export async function sendEmail(to: string, subject: string, html: string): Promise<boolean> {
   try {
-    const transporter = await getTransporter();
-    if (!transporter) return false;
+    const resend = getResendClient();
+    if (!resend) return false;
     const settings = storage.getEmailSettings()!;
-    await transporter.sendMail({
-      from: `"${settings.fromName}" <${settings.smtpUser}>`,
+    const fromEmail = settings.smtpUser || "onboarding@resend.dev";
+    const fromName = settings.fromName || "BibleStudySpot";
+    const { error } = await resend.emails.send({
+      from: `${fromName} <${fromEmail}>`,
       to,
       subject,
       html,
     });
+    if (error) { console.error("[email] Resend error:", error); return false; }
     return true;
   } catch (e) {
     console.error("[email] Failed to send:", e);
@@ -36,9 +33,10 @@ export async function sendEmail(to: string, subject: string, html: string): Prom
 // ── Test connection ────────────────────────────────────────────────────────
 export async function testEmailConnection(): Promise<{ ok: boolean; error?: string }> {
   try {
-    const transporter = await getTransporter();
-    if (!transporter) return { ok: false, error: "No credentials configured" };
-    await transporter.verify();
+    const resend = getResendClient();
+    if (!resend) return { ok: false, error: "No API key configured" };
+    const { error } = await resend.apiKeys.list();
+    if (error) return { ok: false, error: error.message };
     return { ok: true };
   } catch (e: any) {
     return { ok: false, error: e.message };

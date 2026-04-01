@@ -148,10 +148,10 @@ export type ZoomSetting = typeof zoomSettings.$inferSelect;
 // Single-row config table for outbound email (SMTP)
 export const emailSettings = sqliteTable("email_settings", {
   id: integer("id").primaryKey({ autoIncrement: true }),
-  smtpHost: text("smtp_host").notNull().default("smtp.gmail.com"),
-  smtpPort: integer("smtp_port").notNull().default(587),
-  smtpUser: text("smtp_user").notNull().default(""),
-  smtpPass: text("smtp_pass").notNull().default(""),   // app password
+  smtpHost: text("smtp_host").notNull().default(""),       // kept for migration compat
+  smtpPort: integer("smtp_port").notNull().default(587),   // kept for migration compat
+  smtpUser: text("smtp_user").notNull().default(""),       // used as fromEmail
+  smtpPass: text("smtp_pass").notNull().default(""),       // used as Resend API key
   fromName: text("from_name").notNull().default("BibleStudySpot"),
   remindersEnabled: integer("reminders_enabled", { mode: "boolean" }).notNull().default(false),
   updatedAt: text("updated_at").notNull(),

@@ -24,6 +24,7 @@ const allowlist = [
   "passport",
   "passport-local",
   "pdfkit",
+  "resend",
   "stripe",
   "uuid",
   "ws",

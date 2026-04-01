@@ -2344,37 +2344,34 @@ function EmailSettingsTab() {
         </div>
       </div>
 
-      {/* SMTP Config */}
+      {/* Resend Config */}
       <div>
-        <p className={sectionLabel} style={fieldStyle}>Gmail SMTP Configuration</p>
+        <p className={sectionLabel} style={fieldStyle}>Resend Configuration</p>
         <div className="rounded-xl border border-border/40 p-4 space-y-3" style={{ backgroundColor: "hsl(38 25% 98%)" }}>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="sm:col-span-2">
-              <Label className="text-xs" style={fieldStyle}>Gmail Address</Label>
-              <Input value={smtpUser} onChange={e => setSmtpUser(e.target.value)} className="mt-1 h-9 text-sm" placeholder="yourname@gmail.com" />
-            </div>
-            <div>
-              <Label className="text-xs" style={fieldStyle}>Port</Label>
-              <Input value={smtpPort} onChange={e => setSmtpPort(e.target.value)} className="mt-1 h-9 text-sm" placeholder="587" />
-            </div>
-          </div>
           <div>
-            <Label className="text-xs" style={fieldStyle}>App Password</Label>
+            <Label className="text-xs" style={fieldStyle}>Resend API Key</Label>
             <div className="relative mt-1">
               <Input
                 type={showPass ? "text" : "password"}
                 value={smtpPass}
                 onChange={e => setSmtpPass(e.target.value)}
-                className="h-9 text-sm pr-10"
-                placeholder="Gmail App Password (16 characters)"
+                className="h-9 text-sm pr-10 font-mono"
+                placeholder="re_xxxxxxxxxxxxxxxxxxxx"
               />
               <button type="button" className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" onClick={() => setShowPass(v => !v)}>
                 {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
             <p className="text-xs text-muted-foreground mt-1.5" style={fieldStyle}>
-              Use a Gmail App Password, not your regular password.
-              <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline ml-1">Create one here →</a>
+              Get your API key at{" "}
+              <a href="https://resend.com/api-keys" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">resend.com/api-keys</a>
+            </p>
+          </div>
+          <div>
+            <Label className="text-xs" style={fieldStyle}>From Email</Label>
+            <Input value={smtpUser} onChange={e => setSmtpUser(e.target.value)} className="mt-1 h-9 text-sm" placeholder="hello@biblestudyspot.com" />
+            <p className="text-xs text-muted-foreground mt-1.5" style={fieldStyle}>
+              Must be a verified domain in Resend, or use <span className="font-mono">onboarding@resend.dev</span> for testing.
             </p>
           </div>
           <div>
